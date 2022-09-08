@@ -12,12 +12,13 @@ import { fallbackLabel } from '@lljj/vjsf-utils/formUtils';
 
 export default {
     name: 'Widget',
-    inject: ['genFormProvide'],
+    // 定义了第二个变量，用于捕获全局变化，而不通过uioption
+    inject: ['genFormProvide', 'onvaluechanged'],
     props: {
         // 是否同步formData的值，默认表单元素都需要
         // oneOf anyOf 中的select属于formData之外的数据
         isFormData: {
-            type: Boolean,
+            type: Boolean,  
             default: true
         },
         // isFormData = false时需要传入当前 value 否则会通过 curNodePath 自动计算
@@ -331,8 +332,6 @@ export default {
                                 }
                             },
                             input(event) {
-                                console.log(event);
-                                // console.log(self.curNodePath);
                                 const formatValue = self.formatValue(event);
                                 // 默认用户输入变了都是需要更新form数据保持同步，唯一特例 input number
                                 // 为了兼容 number 小数点后0结尾的数据场景
@@ -344,6 +343,15 @@ export default {
                                     //  添加curNodePath
                                     if (self.onChange) {
                                         self.onChange({
+                                            curVal: formatValue.value,
+                                            preVal,
+                                            parentFormData: getPathVal(self.rootFormData, self.curNodePath, 1),
+                                            rootFormData: self.rootFormData,
+                                            path: self.curNodePath,
+                                        });
+                                    }
+                                    if(self.onvaluechanged){
+                                        self.onvaluechanged({
                                             curVal: formatValue.value,
                                             preVal,
                                             parentFormData: getPathVal(self.rootFormData, self.curNodePath, 1),

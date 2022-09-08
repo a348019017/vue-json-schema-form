@@ -24,6 +24,7 @@ import ArrayFieldSpecialFormat from './arrayTypes/ArrayFieldSpecialFormat';
 export default {
     name: 'ArrayField',
     props: vueProps,
+    inject: ['onarraychanged'],
     data() {
         return {
             // 通过维护一份key，一份值 来解决list key的问题
@@ -90,9 +91,15 @@ export default {
                 },
                 remove(target, { index }) {
                     arrayMethods.removeAt(target, index);
+                    if(this.onarraychanged){
+                        this.onarraychanged({type:"remove",  curFormData:this.curFormData, value:this.curFormData[index],path:this.curNodePath });
+                    }  
                 },
                 add(target, { newRowData }) {
-                    target.push(newRowData);
+                    target.push(newRowData);    
+                    if(this.onarraychanged){
+                        this.onarraychanged({type:"add",  curFormData:this.curFormData, value:newRowData,path:this.curNodePath });
+                    }          
                 },
                 batchPush(target, { pushArray }) {
                     pushArray.forEach((item) => {
@@ -113,6 +120,7 @@ export default {
                     // 单个添加
                     formDataPrams = { newRowData: this.getNewFormDataRow() };
                     keysParams = { newRowData: genId() };
+                   
                 } else if (command === 'batchPush') {
                     // 批量添加
                     keysParams = {

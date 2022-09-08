@@ -1,4 +1,4 @@
-/** @license @lljj/vue-json-schema-form (c) 2020-2022 Liu.Jun License: Apache-2.0 */
+/** @license @pong/vue-json-schema-form (c) 2020-2022 Liu.Jun License: Apache-2.0 */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('vue')) :
   typeof define === 'function' && define.amd ? define(['exports', 'vue'], factory) :
@@ -10389,6 +10389,7 @@
             }
           },
           input: function input(event) {
+            // console.log(self.curNodePath);
             var formatValue = self.formatValue(event); // 默认用户输入变了都是需要更新form数据保持同步，唯一特例 input number
             // 为了兼容 number 小数点后0结尾的数据场景
             // 比如 1. 1.010 这类特殊数据输入是不需要触发 新值的设置，否则会导致schema校验为非数字
@@ -10397,14 +10398,15 @@
             var preVal = self.value;
 
             if (formatValue.update && preVal !== formatValue.value) {
-              self.value = formatValue.value;
+              self.value = formatValue.value; //  添加curNodePath
 
               if (self.onChange) {
                 self.onChange({
                   curVal: formatValue.value,
                   preVal: preVal,
                   parentFormData: getPathVal$1(self.rootFormData, self.curNodePath, 1),
-                  rootFormData: self.rootFormData
+                  rootFormData: self.rootFormData,
+                  path: self.curNodePath
                 });
               }
             }
@@ -11708,8 +11710,9 @@
 
   function createForm() {
     var globalOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
     // global components
+    console.log(Vue__default['default']);
+
     if (globalOptions.WIDGET_MAP.widgetComponents) {
       Object.entries(globalOptions.WIDGET_MAP.widgetComponents).forEach(function (_ref) {
         var _ref2 = _slicedToArray(_ref, 2),
@@ -12423,3 +12426,4 @@
   Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
+//# sourceMappingURL=vueJsonSchemaForm.umd.js.map

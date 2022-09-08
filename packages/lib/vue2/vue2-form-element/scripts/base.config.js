@@ -73,7 +73,7 @@ module.exports = ({
         external: config.external,
         onwarn,
         plugins: [
-            del({ targets: [config.output.path] }),
+            // del({ targets: [config.output.path] }),
             json(),
             nodeResolve({
                 extensions: ['.mjs', '.js', '.jsx', '.json', '.vue'],

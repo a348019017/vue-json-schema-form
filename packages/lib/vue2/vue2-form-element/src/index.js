@@ -33,6 +33,7 @@ const globalOptions = Object.freeze({
 const JsonSchemaForm = createVue2Core(globalOptions);
 
 // 存在Vue 全局变量默认注册 VueForm 组件
+
 if (typeof window !== 'undefined' && window.Vue) {
     window.Vue.component('VueForm', JsonSchemaForm);
 }

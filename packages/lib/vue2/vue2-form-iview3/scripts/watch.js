@@ -30,7 +30,7 @@ watcher.on('event', (event) => {
     //   BUNDLE_END   — finished building a bundle
     //   END          — finished building all bundles
     //   ERROR        — encountered an error while bundling
-    console.log(`Watch Event Code: ${event.code}`);
+    console.log(`Watch Event Code: ${event.error}`);
 });
 
 // stop watching

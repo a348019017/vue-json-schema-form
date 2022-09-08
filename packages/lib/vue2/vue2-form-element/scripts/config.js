@@ -11,6 +11,10 @@ const packageData = require('../package.json');
 // eslint-disable-next-line max-len
 const banner = `/** @license ${packageData.name} (c) 2020-${new Date().getFullYear()} ${packageData.author} License: ${packageData.license} */`;
 
+const mypath=`D:\\myprojects\\CesiumMapController\\pmap\\src\\assets\\jsform2`
+
+console.log(resolve("dist/"));
+
 module.exports = {
     entry: resolve('src/index.js'),
     banner,
@@ -20,7 +24,7 @@ module.exports = {
     },
     extractcss: false,
     output: {
-        path: resolve('dist/'),
+        path: mypath,
         file: 'vueJsonSchemaForm', // 导出文件名，自动拼接 format
         name: 'vueJsonSchemaForm', // umd 注册的全局变量名称
         format: ['esm', 'umd']

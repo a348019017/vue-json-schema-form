@@ -34,6 +34,7 @@ export default {
             require: true
         }
     },
+    inject: ["onarraychanged"],
     data() {
         const curSelectIndex = this.computedCurSelectIndexByFormData(getPathVal(this.rootFormData, this.curNodePath));
         return {
@@ -164,6 +165,16 @@ export default {
 
             // 可添加一个配置通知外部这里变更
             // todo: onChangeOption
+            if(this.onarraychanged)
+            {
+               let inputvalues= { type:"remove", curFormData:curFormData, value: curFormData, path :this.curNodePath,isindexchange:true};
+               this.onarraychanged(inputvalues);
+               inputvalues= { type:"add", curFormData:curFormData, value:  newOptionData, path :this.curNodePath,isindexchange:true};
+               this.onarraychanged(inputvalues);
+            }
+
+
+
         }
     },
     render(h) {

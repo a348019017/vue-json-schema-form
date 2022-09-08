@@ -1,4 +1,4 @@
-/** @license @lljj/vue-json-schema-form (c) 2020-2022 Liu.Jun License: Apache-2.0 */
+/** @license @pong/vue-json-schema-form (c) 2020-2022 Liu.Jun License: Apache-2.0 */
 import Vue from 'vue';
 
 function _typeof(obj) {
@@ -10381,6 +10381,7 @@ var Widget = {
           }
         },
         input: function input(event) {
+          // console.log(self.curNodePath);
           var formatValue = self.formatValue(event); // 默认用户输入变了都是需要更新form数据保持同步，唯一特例 input number
           // 为了兼容 number 小数点后0结尾的数据场景
           // 比如 1. 1.010 这类特殊数据输入是不需要触发 新值的设置，否则会导致schema校验为非数字
@@ -10389,14 +10390,15 @@ var Widget = {
           var preVal = self.value;
 
           if (formatValue.update && preVal !== formatValue.value) {
-            self.value = formatValue.value;
+            self.value = formatValue.value; //  添加curNodePath
 
             if (self.onChange) {
               self.onChange({
                 curVal: formatValue.value,
                 preVal: preVal,
                 parentFormData: getPathVal$1(self.rootFormData, self.curNodePath, 1),
-                rootFormData: self.rootFormData
+                rootFormData: self.rootFormData,
+                path: self.curNodePath
               });
             }
           }
@@ -11700,8 +11702,9 @@ var SchemaField = {
 
 function createForm() {
   var globalOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
   // global components
+  console.log(Vue);
+
   if (globalOptions.WIDGET_MAP.widgetComponents) {
     Object.entries(globalOptions.WIDGET_MAP.widgetComponents).forEach(function (_ref) {
       var _ref2 = _slicedToArray(_ref, 2),
@@ -12404,3 +12407,4 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 export default JsonSchemaForm;
 export { SchemaField, vueProps$1 as fieldProps, formUtils, getDefaultFormState, globalOptions, i18n, validate$2 as schemaValidate, vueUtils };
+//# sourceMappingURL=vueJsonSchemaForm.esm.js.map
