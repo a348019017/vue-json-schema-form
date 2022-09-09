@@ -114,67 +114,65 @@ export default {
         // 对新option计算默认值
         curSelectIndex(newVal, oldVal) {
             const curFormData = getPathVal(this.rootFormData, this.curNodePath);
-
+            const cloneoldData=JSON.parse(JSON.stringify(curFormData));   
             // 计算出 新选项默认值
             const newOptionData = getDefaultFormState(this.selectList[newVal], undefined, this.rootSchema);
-
-            const hasOwn = Object.prototype.hasOwnProperty;
-
-            // 移除旧key
-            if (isObject(curFormData)) {
-                const oldSelectSchema = retrieveSchema(
-                    this.selectList[oldVal],
-                    this.rootSchema
-                );
-                if (getSchemaType(oldSelectSchema) === 'object') {
-                    // 移除旧schema添加的属性
-                    // Object.keys(oldSelectSchema.properties)
-                    for (const key in oldSelectSchema.properties) {
-                        if (
-                            hasOwn.call(oldSelectSchema.properties, key)
-                            && !hasOwn.call(newOptionData, key)
-                        ) {
-                            deletePathVal(curFormData, key);
-                            // delete curFormData[key];
+            setPathVal(this.rootFormData, this.curNodePath, newOptionData || curFormData);
+            //不再保留老值，原则上来说需要
+            if (false) {
+                const hasOwn = Object.prototype.hasOwnProperty;
+                // 移除旧key
+                if (isObject(curFormData)) {
+                    const oldSelectSchema = retrieveSchema(
+                        this.selectList[oldVal],
+                        this.rootSchema
+                    );
+                    if (getSchemaType(oldSelectSchema) === 'object') {
+                        // 移除旧schema添加的属性
+                        // Object.keys(oldSelectSchema.properties)
+                        for (const key in oldSelectSchema.properties) {
+                            if (
+                                hasOwn.call(oldSelectSchema.properties, key)
+                                && !hasOwn.call(newOptionData, key)
+                            ) {
+                                deletePathVal(curFormData, key);
+                                // delete curFormData[key];
+                            }
                         }
                     }
                 }
-            }
 
-            // 设置新值
-            if (isObject(newOptionData)) {
-                Object.entries(newOptionData).forEach(([key, value]) => {
-                    if (
-                        value !== undefined
-                        && (
-                            curFormData[key] === undefined
-                            || this.selectList[newVal].properties[key].const !== undefined
-                            || isObject(value)
-                        )
-                    ) {
-                        // 这里没找到一个比较合理的新旧值合并方式
-                        //
-                        // 1. 如果anyOf里面同名属性中的schema包含了 const 配置，产生了新的值这里做覆盖处理
-                        // 2. 其它场景保留同名key的旧的值
-                        setPathVal(curFormData, key, value);
-                    }
-                });
-            } else {
-                setPathVal(this.rootFormData, this.curNodePath, newOptionData || curFormData);
+                // 设置新值
+                if (isObject(newOptionData)) {
+                    Object.entries(newOptionData).forEach(([key, value]) => {
+                        if (
+                            value !== undefined
+                            && (
+                                curFormData[key] === undefined
+                                || this.selectList[newVal].properties[key].const !== undefined
+                                || isObject(value)
+                            )
+                        ) {
+                            // 这里没找到一个比较合理的新旧值合并方式
+                            //
+                            // 1. 如果anyOf里面同名属性中的schema包含了 const 配置，产生了新的值这里做覆盖处理
+                            // 2. 其它场景保留同名key的旧的值
+                            setPathVal(curFormData, key, value);
+                        }
+                    });
+                } else {
+                    setPathVal(this.rootFormData, this.curNodePath, newOptionData || curFormData);
+                }
             }
-
             // 可添加一个配置通知外部这里变更
             // todo: onChangeOption
             if(this.onarraychanged)
             {
-               let inputvalues= { type:"remove", curFormData:curFormData, value: curFormData, path :this.curNodePath,isindexchange:true};
+               let inputvalues= { type:"remove", curFormData:curFormData, value: cloneoldData, path :this.curNodePath,isindexchange:true};
                this.onarraychanged(inputvalues);
                inputvalues= { type:"add", curFormData:curFormData, value:  newOptionData, path :this.curNodePath,isindexchange:true};
                this.onarraychanged(inputvalues);
             }
-
-
-
         }
     },
     render(h) {
